@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GunDB Signup & Login </title>
+</head>
+<body>
+    <h2>GunDB SignUP and Login</h2>
+
+    <div>
+        <h3>SignUp</h3>
+        <input type="text" id="signup-username" placeholder="userName">
+        <input type="password" id="signup-password" placeholder="Password">
+        <button onclick="signup()">Signup</button>
+    </div>
+
+     <div>
+        <h3>Login</h3>
+        <input type="text" id="login-username" placeholder="userName">
+        <input type="password" id="login-password" placeholder="Password">
+        <button onclick="login()">Login</button>
+    </div>
+
+    <p id="status"></p>
+
+    <script src="https://cdn.jsdelivr.net/npm/gun/gun.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/gun/sea.js"></script>
+<!-- <script src="https://cdn.jsdelivr.net/npm/gun/lib/webrtc.js"></script> Optional, for peer-to-peer -->
+
+    <script>
+        //connect to Gundb backend
+        const gun=Gun({peers : ['http://localhost:8765/gun']});
+        const user=gun.user();
+
+        const signup=()=>{
+            const userName=document.getElementById('signup-username').value;
+            const password=document.getElementById('signup-password').value;
+
+            //creating a user 
+            user.create(userName,password,ack=>{
+                document.getElementById('status').innerHTML=ack.err || "signup Successful";
+
+                // Clear input fields
+                document.getElementById('signup-username').value = "";
+                document.getElementById('signup-password').value = "";
+            });
+        }
+
+        const login=()=>{
+            const userName=document.getElementById('login-username').value;
+            const password=document.getElementById('login-password').value;   
+            
+            //verifying the user
+
+            user.auth(userName,password,ack=>{
+                document.getElementById('status').innerHTML=ack.err || "login successful";
+
+                // Clear input fields
+                document.getElementById('login-username').value = "";
+                document.getElementById('login-password').value = "";
+            });
+        }
+
+
+    </script>
+</body>
+</html>
